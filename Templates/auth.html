@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+<div class="auth-data" id="app1">
+    {% for message in messages %}
+    <p class="success">{{ message }}</p>
+    {% endfor %}
+    <div class="auth">
+        <form action="{% url 'authen' %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <h4 class="mb-4">Authenticate with Qr code and TOTP</h4>
+            <input type="text" autofocus placeholder="put your 6 digits code here" name="totp" class="form-control mb-3">
+            <input type="file" name="image" class="form-control mb-3">
+            <button class="btn btn-success">Authenticate</button>
+        </form>
+    </div>    
+</div>
+
+{% endblock content %}

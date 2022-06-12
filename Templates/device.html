@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block device %}
+<meta http-equiv="refresh" content="30">
+<div class="qr-data">
+</div>
+<div class="qrcode">
+    <b>{{otp}}</b><br>
+    <img src="{{qr_name}}" alt="">
+</div>
+
+
+
+
+
+<style>
+    .auth {
+        text-align: center;
+        margin-top: 50px;
+    }
+
+    .qrcode {
+        margin-top: 50px;
+        text-align: center;
+    }
+</style>
+{% endblock %}
+
+<!-- <script>
+    var app = new Vue({
+        delimiters: ['[', ']'],
+        el: '#app1',
+        data: {
+            img: null,
+        },
+        methods: {
+            takeimg(e) {
+                console.log(e.target.files[0])
+                this.img = e.target.files[0]
+            },
+            auth(event) {
+                console.log(this.img)
+                const URL = 'http://127.0.0.1:8000/api/authenticate';
+                let data = new FormData();
+                data.append('file', this.img);
+
+                let config = {
+                    header: {
+                        'Content-Type': 'image/png'
+                    }
+                }
+                axios.post(URL,data,config).then(data => {
+                    console.log(data)
+                })
+                    .catch(err => {
+                        console.log(err.response)
+                    })
+            }
+        },
+
+    })
+</script> -->
