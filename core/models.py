@@ -1,5 +1,11 @@
 from django.db import models
 import pyotp
+import barcode
+from barcode.writer import ImageWriter
+from io import BytesIO
+from django.core.files import File
+import os
+
 # Create your models here.
 
 class Device(models.Model):
@@ -35,21 +41,39 @@ class TOTP(models.Model):
     totp = models.CharField(max_length=50)
     seed = models.CharField(max_length=50)
     created = models.DateTimeField(auto_now_add=True)
-
-    created.editable = True
+    barcode = models.ImageField(upload_to='barcodeImages',blank=True,null=True)
+    # created.editable = True
 
     def __str__(self) -> str:
         display = f'{self.totp} + {self.seed}'
         return display
+
+    def save(self, *args, **kwargs):
+        EAN = barcode.get_barcode_class('code128')
+        ean = EAN(f'{self.totp}', writer=ImageWriter())
+        buffer = BytesIO()
+        ean.write(buffer)
+        self.barcode.save(f'{self.seed}{self.totp}.png', File(buffer), save=False)
+        return super().save(*args, **kwargs)
 
 
 
 class TM_INTERVAL(models.Model):
     totp = models.CharField(max_length=50)
     seed = models.CharField(max_length=50)
+    barcode = models.ImageField(upload_to='barcodeImages',blank=True,null=True)
     created = models.DateTimeField(auto_now_add=True)
 
-    created.editable = True
+    # created.editable = True
+
+    def save(self, *args, **kwargs):
+        EAN = barcode.get_barcode_class('code128')
+        ean = EAN(f'{self.totp}', writer=ImageWriter())
+        buffer = BytesIO()
+        ean.write(buffer)
+        self.barcode.save(f'{self.seed}{self.totp}.png', File(buffer), save=False)
+        return super().save(*args, **kwargs)
+    
 
     def __str__(self) -> str:
         display = f'{self.totp} + {self.seed}'
@@ -63,7 +87,7 @@ class IntervalTwenty(models.Model):
 
     reached = models.BooleanField(default=False)
 
-    start_time.editable = True
+    # start_time.editable = True
 
 
 class IntervalTwenty2(models.Model):
@@ -73,4 +97,4 @@ class IntervalTwenty2(models.Model):
 
     reached = models.BooleanField(default=False)
 
-    start_time.editable = True
+    # start_time.editable = True
